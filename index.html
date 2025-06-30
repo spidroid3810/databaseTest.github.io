@@ -4,20 +4,40 @@
 <ul id="users"></ul>
 
 <script>
+const API_BASE = "https://lavabase1.p.rapidapi.com/data/collection";
+const RAPIDAPI_KEY = "84c43fe5bfmsh15ef16dec39f38fp1707bbjsnf150e223d8a9";
+const RAPIDAPI_HOST = "lavabase1.p.rapidapi.com";
+
 async function addUser() {
-  const name = document.getElementById('name').value;
-  await fetch('https://lavabase.onrender.com/data/your-collection', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const name = document.getElementById("name").value;
+  if (!name.trim()) return alert("Name is required");
+
+  await fetch(API_BASE, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-RapidAPI-Key": RAPIDAPI_KEY,
+      "X-RapidAPI-Host": RAPIDAPI_HOST
+    },
     body: JSON.stringify({ name })
   });
+
+  document.getElementById("name").value = "";
   loadUsers();
 }
 
 async function loadUsers() {
-  const res = await fetch('https://lavabase.onrender.com/data/your-collection');
+  const res = await fetch(API_BASE, {
+    headers: {
+      "X-RapidAPI-Key": RAPIDAPI_KEY,
+      "X-RapidAPI-Host": RAPIDAPI_HOST
+    }
+  });
+
   const users = await res.json();
-  document.getElementById('users').innerHTML = users.map(u => `<li>${u.name}</li>`).join('');
+  document.getElementById("users").innerHTML = users
+    .map(u => `<li>${u.name}</li>`)
+    .join("");
 }
 
 loadUsers();
